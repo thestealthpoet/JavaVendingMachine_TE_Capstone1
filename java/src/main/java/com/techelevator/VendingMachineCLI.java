@@ -13,7 +13,7 @@ public class VendingMachineCLI {
 	private static final String MAIN_MENU_OPTION_EXIT = "Exit";
 	private static final String[] MAIN_MENU_OPTIONS = { MAIN_MENU_OPTION_DISPLAY_ITEMS, MAIN_MENU_OPTION_PURCHASE ,MAIN_MENU_OPTION_EXIT};
 	private VendingMachine vendingMachine;
-
+	private Scanner scanner = new Scanner(System.in);
 	private Menu menu;
 
 	public VendingMachineCLI(Menu menu) {
@@ -63,8 +63,7 @@ public class VendingMachineCLI {
 			case PURCHASE_MENU_OPTION_FEED_MONEY:
 				feedMoney();
 			case PURCHASE_MENU_OPTION_SELECT_PRODUCT:
-				//TODO
-				//selectProduct();
+				selectProduct();
 			case PURCHASE_MENU_OPTION_FINISH_TRANSACTION:
 				//TODO
 				//finishTransaction();
@@ -73,7 +72,7 @@ public class VendingMachineCLI {
 
 	private void feedMoney() {
 		boolean shouldContinue = true;
-		Scanner scanner = new Scanner(System.in);
+
 		while (shouldContinue) {
 			System.out.println("How much money would you like to pay? Whole dollar amounts only");
 			try {
@@ -101,6 +100,21 @@ public class VendingMachineCLI {
 				}
 			}
 		}
+
+	}
+	private void selectProduct() {
+		System.out.println("What item would you like to purchase?");
+		displayPurchaseItems();
+		String idChoice = scanner.nextLine();
+		VendingMachineItem itemToVend = null;
+		List<VendingMachineItem> allItems = vendingMachine.getInventory();
+		for (VendingMachineItem item: allItems) {
+			if (idChoice.equals(item.getId())) {
+				itemToVend = item;
+				break;
+			} 
+		}//todo requirements 7.2.b 
+		System.out.println(itemToVend);
 	}
 
 

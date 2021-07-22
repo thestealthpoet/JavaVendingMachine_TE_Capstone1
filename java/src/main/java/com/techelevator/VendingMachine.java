@@ -61,4 +61,6 @@ public class VendingMachine {
         amountFed = amountFed.add(amountToAdd);
         return amountFed;
     }
+
+
 }
