@@ -2,7 +2,9 @@ package com.techelevator;
 
 import com.techelevator.view.Menu;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Scanner;
 
 public class VendingMachineCLI {
 
@@ -36,13 +38,6 @@ public class VendingMachineCLI {
 		}
 	}
 
-	public static void main(String[] args) {
-		Menu menu = new Menu(System.in, System.out);
-		VendingMachineCLI cli = new VendingMachineCLI(menu);
-		cli.run();
-	}
-
-
 	public void displayPurchaseItems(){
 		VendingMachineItem[] items = vendingMachine.getInventory().toArray(new VendingMachineItem[0]);
 		for(int i = 0;i<items.length;i++ ){
@@ -60,12 +55,46 @@ public class VendingMachineCLI {
 										PURCHASE_MENU_OPTION_FINISH_TRANSACTION};
 
 		String choice = (String) menu.getChoiceFromOptions(purchaseMenuOptions);
-		//System.out.println(choice);
-		
+
+		// TODO: DEAL WITH THIS
+		System.out.println("\n Current Money Provided: $" + vendingMachine.getAmountFed());
+
+		switch(choice) {
+			case PURCHASE_MENU_OPTION_FEED_MONEY:
+				feedMoney();
+			case PURCHASE_MENU_OPTION_SELECT_PRODUCT:
+				//TODO
+				//selectProduct();
+			case PURCHASE_MENU_OPTION_FINISH_TRANSACTION:
+				//TODO
+				//finishTransaction();
+		}
+	}
+
+	private void feedMoney() {
+		System.out.println("How much money would you like to pay? ");
+		Scanner scanner = new Scanner(System.in);
+
+		try {
+			Integer moneyInput = Integer.parseInt(scanner.nextLine());
+			vendingMachine.addMoney(new BigDecimal(moneyInput));
+		} catch (IllegalArgumentException e){
+			System.out.println("Please enter a valid, whole dollar amount.");
+		}
+	}
 
 
 
 
 
+
+
+
+
+
+	public static void main(String[] args) {
+		Menu menu = new Menu(System.in, System.out);
+		VendingMachineCLI cli = new VendingMachineCLI(menu);
+		cli.run();
 	}
 }
