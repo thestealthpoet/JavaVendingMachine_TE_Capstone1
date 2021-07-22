@@ -37,4 +37,8 @@ public abstract class VendingMachineItem {
 
     public abstract String getSound();
 
+    public String toString() {
+        return this.id + " " + this.name  + " " + this.price;
+    }
+
 }
