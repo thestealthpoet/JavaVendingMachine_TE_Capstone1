@@ -49,4 +49,11 @@ public class VendingMachine {
         return inventory;
     }
 
+    public List<VendingMachineItem> getInventory() {
+        return inventory;
+    }
+
+    public BigDecimal getAmountFed() {
+        return amountFed;
+    }
 }

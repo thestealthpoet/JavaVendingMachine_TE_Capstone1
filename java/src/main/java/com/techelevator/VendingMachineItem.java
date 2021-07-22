@@ -37,6 +37,13 @@ public abstract class VendingMachineItem {
 
     public abstract String getSound();
 
+    public boolean isSoldOut(){
+        if(this.stock == 0){
+            return true;
+        }
+        return false;
+    }
+
     public String toString() {
         return this.id + " " + this.name  + " " + this.price;
     }
