@@ -58,7 +58,7 @@ public class VendingMachine {
     }
 
     public BigDecimal addMoney(BigDecimal amountToAdd) {
-        amountFed.add(amountToAdd);
+        amountFed = amountFed.add(amountToAdd);
         return amountFed;
     }
 }

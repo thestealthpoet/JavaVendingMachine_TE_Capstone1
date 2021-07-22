@@ -57,7 +57,7 @@ public class VendingMachineCLI {
 		String choice = (String) menu.getChoiceFromOptions(purchaseMenuOptions);
 
 		// TODO: DEAL WITH THIS
-		System.out.println("\n Current Money Provided: $" + vendingMachine.getAmountFed());
+		System.out.println("\nCurrent Money Provided: $" + vendingMachine.getAmountFed());
 
 		switch(choice) {
 			case PURCHASE_MENU_OPTION_FEED_MONEY:
@@ -72,20 +72,36 @@ public class VendingMachineCLI {
 	}
 
 	private void feedMoney() {
-		System.out.println("How much money would you like to pay? ");
+		boolean shouldContinue = true;
 		Scanner scanner = new Scanner(System.in);
+		while (shouldContinue) {
+			System.out.println("How much money would you like to pay? Whole dollar amounts only");
+			try {
+				Integer moneyInput = Integer.parseInt(scanner.nextLine());
+				vendingMachine.addMoney(new BigDecimal(moneyInput));
 
-		try {
-			Integer moneyInput = Integer.parseInt(scanner.nextLine());
-			vendingMachine.addMoney(new BigDecimal(moneyInput));
-		} catch (IllegalArgumentException e){
-			System.out.println("Please enter a valid, whole dollar amount.");
+			} catch (IllegalArgumentException e) {
+				System.out.println("Please enter a valid, whole dollar amount.");
+			}
+			System.out.println("\nCurrent Money Provided: $" + vendingMachine.getAmountFed());
+			boolean askAgain = true;
+			while(askAgain) {
+				System.out.println("Would you like to add more money? Y/N");
+				String response = scanner.nextLine();
+
+				if (response.toUpperCase().equals("Y") || response.toUpperCase().equals("N")) {
+					askAgain = false;
+				}
+				else{
+					System.out.println("Invalid option. Enter Y or N");
+				}
+
+				if (response.toUpperCase().equals("N")) {
+					shouldContinue = false;
+				}
+			}
 		}
 	}
-
-
-
-
 
 
 
