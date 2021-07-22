@@ -28,7 +28,7 @@ public class VendingMachineCLI {
 				displayPurchaseItems();
 
 			} else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
-				// do purchase
+				purchasingProcessMenu();
 			}
 			else if(choice.equals(MAIN_MENU_OPTION_EXIT))
 				//TODO Add logger later
@@ -48,5 +48,24 @@ public class VendingMachineCLI {
 		for(int i = 0;i<items.length;i++ ){
 			System.out.println(items[i].getId() +" "+items[i].getName() +" QTY: "+(items[i].isSoldOut()?"SOLD OUT":items[i].getStock()));
 		}
+	}
+
+	public void purchasingProcessMenu() {
+		final String PURCHASE_MENU_OPTION_FEED_MONEY = "Feed Money";
+		final String PURCHASE_MENU_OPTION_SELECT_PRODUCT = "Select Product";
+		final String PURCHASE_MENU_OPTION_FINISH_TRANSACTION = "Finish Transaction";
+
+		String[] purchaseMenuOptions = {PURCHASE_MENU_OPTION_FEED_MONEY,
+										PURCHASE_MENU_OPTION_SELECT_PRODUCT,
+										PURCHASE_MENU_OPTION_FINISH_TRANSACTION};
+
+		String choice = (String) menu.getChoiceFromOptions(purchaseMenuOptions);
+		//System.out.println(choice);
+		
+
+
+
+
+
 	}
 }
