@@ -10,7 +10,9 @@ import java.math.BigDecimal;
 import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 public class VendingMachineCLI {
@@ -23,11 +25,15 @@ public class VendingMachineCLI {
 	private Scanner scanner = new Scanner(System.in);
 	private Menu menu;
 	private Logger auditLogger;
+	private Logger totalSalesLogger;
+//	private Map<String, Integer> countSales;
 
 	public VendingMachineCLI(Menu menu) {
 		this.menu = menu;
 		this.vendingMachine = new VendingMachine();
 		this.auditLogger = new Logger("Log.txt");
+		this.totalSalesLogger = new Logger("TotalSales.txt");
+//		this.countSales = new HashMap<>();
 	}
 
 	public void run() {
@@ -147,7 +153,6 @@ public class VendingMachineCLI {
 	}
 
 	public void dispenseProduct(VendingMachineItem itemToVend) {
-
 			BigDecimal previousBalance = vendingMachine.getBalance();
 			itemToVend.reduceStock();
 
@@ -157,7 +162,6 @@ public class VendingMachineCLI {
 			System.out.println(itemToVend.getSound());
 
 			auditLogger.logWithDateStamp(itemToVend.getName() + " " + itemToVend.getId() + " $" + previousBalance + " $" + vendingMachine.getBalance());
-
 	}
 
 	public void finishTransaction() {
@@ -170,7 +174,5 @@ public class VendingMachineCLI {
 		Menu menu = new Menu(System.in, System.out);
 		VendingMachineCLI cli = new VendingMachineCLI(menu);
 		cli.run();
-
-
 	}
 }
