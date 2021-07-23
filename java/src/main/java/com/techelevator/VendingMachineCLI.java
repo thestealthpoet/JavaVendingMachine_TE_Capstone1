@@ -25,20 +25,19 @@ public class VendingMachineCLI {
 	private Scanner scanner = new Scanner(System.in);
 	private Menu menu;
 	private Logger auditLogger;
-	private Logger totalSalesLogger;
-//	private Map<String, Integer> countSales;
+	private Map<VendingMachineItem, Integer> countSales;
 
 	public VendingMachineCLI(Menu menu) {
 		this.menu = menu;
 		this.vendingMachine = new VendingMachine();
 		this.auditLogger = new Logger("Log.txt");
-		this.totalSalesLogger = new Logger("TotalSales.txt");
-//		this.countSales = new HashMap<>();
+		this.countSales = new HashMap<>();
 	}
 
 	public void run() {
+		loadCountSalesMap();
 		while (true) {
-			String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS);
+			String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS, true);
 
 			if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
@@ -53,6 +52,8 @@ public class VendingMachineCLI {
 					e.printStackTrace();
 				}
 				System.exit(0);
+			} else if (choice.equals("Hidden Menu")) {
+				printHiddenMenu();
 			}
 		}
 	}
@@ -162,12 +163,52 @@ public class VendingMachineCLI {
 			System.out.println(itemToVend.getSound());
 
 			auditLogger.logWithDateStamp(itemToVend.getName() + " " + itemToVend.getId() + " $" + previousBalance + " $" + vendingMachine.getBalance());
+			addItemToMap(itemToVend);
 	}
 
 	public void finishTransaction() {
 		BigDecimal previousBalance = vendingMachine.getBalance();
 		System.out.println(vendingMachine.dispenseChange());
 		auditLogger.logWithDateStamp("GIVE CHANGE: $" + previousBalance + " $" + vendingMachine.getBalance());
+	}
+
+	public void addItemToMap(VendingMachineItem itemToVend) {
+		countSales.put(itemToVend, countSales.get(itemToVend) + 1);
+	}
+
+	private void printHiddenMenu() {
+		DateTimeFormatter format = DateTimeFormatter.ofPattern("MM-dd-yyyy_HH-mm-ss");
+		String dateTime = LocalDateTime.now().format(format);
+
+		String fileName = "SalesReport" + dateTime + ".txt";
+		Logger totalSalesLogger = new Logger(fileName);
+
+		BigDecimal totalSales = new BigDecimal("0.0");
+
+		for(VendingMachineItem item : countSales.keySet()) {
+			int quantity = countSales.get(item);
+			BigDecimal costForItem = new BigDecimal(quantity).multiply(item.getPrice());
+			totalSales = totalSales.add(costForItem);
+			totalSalesLogger.log(item.getName() + "|" + quantity);
+		}
+
+		totalSalesLogger.log("TOTAL SALES: $" + totalSales);
+		totalSalesLogger.flush();
+		try {
+			totalSalesLogger.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void loadCountSalesMap() {
+		List<VendingMachineItem> items = vendingMachine.getInventory();
+
+		for (VendingMachineItem item : items) {
+			if(!countSales.containsKey(item)) {
+				countSales.put(item, 0);
+			}
+		}
 	}
 
 	public static void main(String[] args) {

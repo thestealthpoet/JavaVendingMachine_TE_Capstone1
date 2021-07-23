@@ -19,18 +19,29 @@ public class Menu {
 		Object choice = null;
 		while (choice == null) {
 			displayMenuOptions(options);
-			choice = getChoiceFromUserInput(options);
+			choice = getChoiceFromUserInput(options, false);
 		}
 		return choice;
 	}
 
-	private Object getChoiceFromUserInput(Object[] options) {
+	public Object getChoiceFromOptions(Object[] options, boolean hasHiddenOption) {
+		Object choice = null;
+		while (choice == null) {
+			displayMenuOptions(options);
+			choice = getChoiceFromUserInput(options, hasHiddenOption);
+		}
+		return choice;
+	}
+
+	private Object getChoiceFromUserInput(Object[] options, boolean hiddenOption) {
 		Object choice = null;
 		String userInput = in.nextLine();
 		try {
 			int selectedOption = Integer.valueOf(userInput);
 			if (selectedOption > 0 && selectedOption <= options.length) {
 				choice = options[selectedOption - 1];
+			} else if (hiddenOption && selectedOption == options.length + 1) {
+				choice = "Hidden Menu";
 			}
 		} catch (NumberFormatException e) {
 			// eat the exception, an error message will be displayed below since choice will be null
@@ -40,6 +51,8 @@ public class Menu {
 		}
 		return choice;
 	}
+
+
 
 	private void displayMenuOptions(Object[] options) {
 		out.println();

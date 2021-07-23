@@ -41,6 +41,14 @@ public class Logger {
         writer.flush();
     }
 
+    public void log(String input) {
+        writer.println(input);
+    }
+
+    public void flush() {
+        writer.flush();
+    }
+
     public void close() throws IOException {
         writer.close();
     }
