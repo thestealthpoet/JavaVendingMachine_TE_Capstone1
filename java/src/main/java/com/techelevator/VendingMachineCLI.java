@@ -1,5 +1,6 @@
 package com.techelevator;
 
+import com.techelevator.exceptions.InsufficientFundsException;
 import com.techelevator.exceptions.InvalidChoiceException;
 import com.techelevator.exceptions.OutOfStockException;
 import com.techelevator.view.Menu;
@@ -53,15 +54,15 @@ public class VendingMachineCLI {
 		final String PURCHASE_MENU_OPTION_FINISH_TRANSACTION = "Finish Transaction";
 
 		String[] purchaseMenuOptions = {PURCHASE_MENU_OPTION_FEED_MONEY,
-										PURCHASE_MENU_OPTION_SELECT_PRODUCT,
-										PURCHASE_MENU_OPTION_FINISH_TRANSACTION};
+				PURCHASE_MENU_OPTION_SELECT_PRODUCT,
+				PURCHASE_MENU_OPTION_FINISH_TRANSACTION};
 
 		boolean shouldDisplay = true;
 		while(shouldDisplay) {
-		String choice = (String) menu.getChoiceFromOptions(purchaseMenuOptions);
+			String choice = (String) menu.getChoiceFromOptions(purchaseMenuOptions);
 
-		// TODO: DEAL WITH THIS
-		System.out.println("\nCurrent Money Provided: $" + vendingMachine.getAmountFed());
+			// TODO: DEAL WITH THIS
+			System.out.println("\nCurrent Money Provided: $" + vendingMachine.getBalance());
 
 
 			switch (choice) {
@@ -71,56 +72,52 @@ public class VendingMachineCLI {
 				case PURCHASE_MENU_OPTION_SELECT_PRODUCT:
 					try {
 						selectProduct();
-					} catch (InvalidChoiceException | OutOfStockException e) {
+					} catch (InvalidChoiceException | OutOfStockException | InsufficientFundsException e) {
 						System.out.println(e.getMessage());
 					}
 					break;
 				case PURCHASE_MENU_OPTION_FINISH_TRANSACTION:
 					//TODO
 					//finishTransaction();
+					System.out.println(vendingMachine.dispenseChange());
 					shouldDisplay = false;
 			}
 		}
 	}
 
 	private void feedMoney() {
-		boolean shouldContinue = true;
+		String[] validAmounts = {"$1", "$5", "$10", "$20"};
+		boolean askAgain = true;
 
-		//FIXME - get out of this loop somehow
-		while (shouldContinue) {
+		while (askAgain) {
 			System.out.println("How much money would you like to pay? Whole dollar amounts only");
-			String[] validAmounts = {"$1", "$5", "$10", "$20"};
-			boolean askAgain = true;
+			String choice = (String) menu.getChoiceFromOptions(validAmounts);
+			choice = choice.substring(1);
+			BigDecimal moneyInput = new BigDecimal(choice);
+			vendingMachine.addMoney(moneyInput);
+			System.out.println("\nCurrent Money Provided: $" + vendingMachine.getBalance());
 
-			while (askAgain) {
-				String choice = (String) menu.getChoiceFromOptions(validAmounts);
-				choice = choice.substring(1);
-				BigDecimal moneyInput = new BigDecimal(choice);
-				vendingMachine.addMoney(moneyInput);
-				System.out.println("\nCurrent Money Provided: $" + vendingMachine.getAmountFed());
+			System.out.println("Would you like to add more money?");
+			String[] options = {"Yes", "No"};
+			String response = (String) menu.getChoiceFromOptions(options);
 
-				System.out.println("Would you like to add more money?");
-				String[] options = {"Yes", "No"};
-				String response = (String) menu.getChoiceFromOptions(options);
-
-				if (response.equals("No")) {
-					askAgain = false;
-				}
+			if (response.equals("No")) {
+				askAgain = false;
 			}
-	}
+		}
 
 	}
-	private void selectProduct() throws OutOfStockException, InvalidChoiceException {
+	private void selectProduct() throws OutOfStockException, InvalidChoiceException, InsufficientFundsException {
 		System.out.println("What item would you like to purchase?");
 		displayPurchaseItems();
 		String idChoice = scanner.nextLine();
 		VendingMachineItem itemToVend = null;
 		List<VendingMachineItem> allItems = vendingMachine.getInventory();
 		for (VendingMachineItem item: allItems) {
-			if (idChoice.equals(item.getId())) {
+			if (idChoice.toUpperCase().equals(item.getId().toUpperCase())) {
 				itemToVend = item;
 				break;
-			} 
+			}
 		}
 		// If valid product has not been chosen, tell user
 		if(itemToVend == null) {
@@ -132,12 +129,23 @@ public class VendingMachineCLI {
 			throw new OutOfStockException();
 		}
 
+		if(vendingMachine.balance.compareTo(itemToVend.getPrice())< 0) {
+			throw new InsufficientFundsException();
+		}
+
 		// If valid item is chosen, dispense it to customer
+
 		dispenseProduct(itemToVend);
 	}
 
 	public void dispenseProduct(VendingMachineItem itemToVend) {
 
+			itemToVend.reduceStock();
+			System.out.println("Dispensing");
+			//TODO ADD LOGGER
+			vendingMachine.subtractMoney(itemToVend.getPrice());
+			System.out.println(itemToVend.getName()+" "+itemToVend.getPrice()+" Balance Remaining: "+ vendingMachine.getBalance());
+			System.out.println(itemToVend.getSound());
 	}
 
 

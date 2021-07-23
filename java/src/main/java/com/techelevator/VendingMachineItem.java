@@ -31,8 +31,13 @@ public abstract class VendingMachineItem {
         return stock;
     }
 
-    public void setStock(int stock) {
-        this.stock = stock;
+
+    public boolean reduceStock(){
+        if(isSoldOut())
+            return  false;
+
+        stock--;
+        return true;
     }
 
     public abstract String getSound();

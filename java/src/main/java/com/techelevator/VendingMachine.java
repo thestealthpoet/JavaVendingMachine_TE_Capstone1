@@ -5,12 +5,11 @@ import java.io.FileNotFoundException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 
 public class VendingMachine {
     private List<VendingMachineItem> inventory = new ArrayList<>();
-    BigDecimal amountFed = new BigDecimal("0.00");
+    BigDecimal balance = new BigDecimal("0.00");
 
     public VendingMachine() {
         stockVendingMachine();
@@ -53,14 +52,46 @@ public class VendingMachine {
         return inventory;
     }
 
-    public BigDecimal getAmountFed() {
-        return amountFed;
+    public BigDecimal getBalance() {
+        return balance;
     }
 
     public BigDecimal addMoney(BigDecimal amountToAdd) {
-        amountFed = amountFed.add(amountToAdd);
-        return amountFed;
+        balance = balance.add(amountToAdd);
+        return balance;
+    }
+
+    public BigDecimal subtractMoney(BigDecimal amountToSubtract){
+        balance = balance.subtract(amountToSubtract);
+        return balance;
     }
 
 
+    public void dispenseChange(){
+        final BigDecimal QUARTER = new BigDecimal("0.25");
+        final BigDecimal DIME = new BigDecimal("0.10");
+        final BigDecimal NICKEL = new BigDecimal("0.05");
+
+//        String change = "";
+//        BigDecimal numOfQuarters =balance.divide(QUARTER);
+//        change += numOfQuarters + " QUARTERS ";
+//
+//        amountToRemove = amountToRemove.multiply(QUARTER);
+//        balance.subtract(amountToRemove);
+//
+//        amountToRemove = balance.divide(DIME);
+//        change += amountToRemove + " DIMES ";
+//
+//        amountToRemove = amountToRemove.multiply(DIME);
+//        balance = balance.subtract(amountToRemove);
+//
+//        amountToRemove = balance.divide(NICKEL);
+//        change += amountToRemove + " NICKELS ";
+//
+//        amountToRemove = amountToRemove.multiply(NICKEL);
+//        balance = balance.subtract(amountToRemove);
+
+       // return change;
+
+    }
 }
