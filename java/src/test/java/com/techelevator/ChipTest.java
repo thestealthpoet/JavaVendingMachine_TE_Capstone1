@@ -5,13 +5,13 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class ChipsTest {
+public class ChipTest {
 
 
     @Test
     public void chipSoundIsCrunchCrunchYum(){
         //ARRANGE
-        Chips item = new Chips("Pringles",new BigDecimal("5.00"),"A2");
+        Chip item = new Chip("Pringles",new BigDecimal("5.00"),"A2");
         //ACT
         String actual = item.getSound();
         String expected = "Crunch Crunch, Yum!";
@@ -24,7 +24,7 @@ public class ChipsTest {
     @Test
     public void chipIsMaxQtyOnLoad(){
         //ARRANGE
-        Chips item = new Chips("Pringles",new BigDecimal("5.00"),"A2");
+        Chip item = new Chip("Pringles",new BigDecimal("5.00"),"A2");
         //ACT
         int actual = item.getStock();
         int expected = 5;

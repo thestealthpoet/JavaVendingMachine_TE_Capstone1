@@ -5,16 +5,16 @@ import org.junit.Test;
 
 import java.math.BigDecimal;
 
-public class BeverageTest {
+public class DrinkTest {
 
 
 
     @Test
-    public void beverageSoundIsGlugGlugYum(){
+    public void drinkSoundIsGlugGlugYum(){
         //ARRANGE
-        Beverage beverage = new Beverage("Water",new BigDecimal("1.00"),"A2");
+        Drink drink = new Drink("Water",new BigDecimal("1.00"),"A2");
         //ACT
-        String actual = beverage.getSound();
+        String actual = drink.getSound();
         String expected = "Glug Glug, Yum!";
         //ASSERT
         Assert.assertEquals(expected, actual);
@@ -23,11 +23,11 @@ public class BeverageTest {
 
 
     @Test
-    public void beverageIsMaxQtyOnLoad(){
+    public void drinkIsMaxQtyOnLoad(){
         //ARRANGE
-        Beverage beverage = new Beverage("Water",new BigDecimal("1.00"),"B2");
+        Drink drink = new Drink("Water",new BigDecimal("1.00"),"B2");
         //ACT
-        int actual = beverage.getStock();
+        int actual = drink.getStock();
         int expected = 5;
         //ASSERT
         Assert.assertEquals(expected, actual);

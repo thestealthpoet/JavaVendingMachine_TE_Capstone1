@@ -1,6 +1,5 @@
 package com.techelevator;
 
-import javax.naming.NoInitialContextException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
@@ -34,14 +33,14 @@ public class VendingMachine {
                     case "candy":
                         inventory.add(new Candy(name, price, id));
                         break;
-                    case "chips":
-                        inventory.add(new Chips(name, price, id));
+                    case "chip":
+                        inventory.add(new Chip(name, price, id));
                         break;
                     case "gum":
                         inventory.add(new Gum(name, price, id));
                         break;
-                    case "beverage":
-                        inventory.add(new Beverage(name, price, id));
+                    case "drink":
+                        inventory.add(new Drink(name, price, id));
                 }
             }
         } catch (FileNotFoundException e) {
@@ -81,7 +80,7 @@ public class VendingMachine {
         balance = balance.subtract((numOfDimes).multiply(DIME));
         BigDecimal numOfNickels = balance.divide(NICKEL).setScale(0, RoundingMode.DOWN);
         balance = balance.subtract((numOfNickels).multiply(NICKEL));
-        String change = numOfQuarters + " Quarters, " + numOfDimes + " Dimes, " + numOfNickels + " nickels is your change.";
+        String change = numOfQuarters + " quarters, " + numOfDimes + " dimes, " + numOfNickels + " nickels is your change.";
         return change;
     }
 }
