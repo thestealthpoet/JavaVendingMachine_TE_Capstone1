@@ -108,8 +108,9 @@ public class VendingMachineCLI {
 
 	}
 	private void selectProduct() throws OutOfStockException, InvalidChoiceException, InsufficientFundsException {
-		System.out.println("What item would you like to purchase?");
+		//System.out.println("What item would you like to purchase?");
 		displayPurchaseItems();
+		System.out.print("Choose the snack you would like to purchase>>>");
 		String idChoice = scanner.nextLine();
 		VendingMachineItem itemToVend = null;
 		List<VendingMachineItem> allItems = vendingMachine.getInventory();
@@ -141,10 +142,10 @@ public class VendingMachineCLI {
 	public void dispenseProduct(VendingMachineItem itemToVend) {
 
 			itemToVend.reduceStock();
-			System.out.println("Dispensing");
 			//TODO ADD LOGGER
 			vendingMachine.subtractMoney(itemToVend.getPrice());
-			System.out.println(itemToVend.getName()+" "+itemToVend.getPrice()+" Balance Remaining: "+ vendingMachine.getBalance());
+			System.out.println("\nDispensing " + itemToVend.getName()+" $"+itemToVend.getPrice());
+			System.out.println("Balance Remaining: $"+ vendingMachine.getBalance());
 			System.out.println(itemToVend.getSound());
 	}
 

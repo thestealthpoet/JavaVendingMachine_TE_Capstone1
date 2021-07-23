@@ -1,8 +1,10 @@
 package com.techelevator;
 
+import javax.naming.NoInitialContextException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -67,31 +69,20 @@ public class VendingMachine {
     }
 
 
-    public void dispenseChange(){
+    public String dispenseChange(){
         final BigDecimal QUARTER = new BigDecimal("0.25");
         final BigDecimal DIME = new BigDecimal("0.10");
         final BigDecimal NICKEL = new BigDecimal("0.05");
 
-//        String change = "";
-//        BigDecimal numOfQuarters =balance.divide(QUARTER);
-//        change += numOfQuarters + " QUARTERS ";
-//
-//        amountToRemove = amountToRemove.multiply(QUARTER);
-//        balance.subtract(amountToRemove);
-//
-//        amountToRemove = balance.divide(DIME);
-//        change += amountToRemove + " DIMES ";
-//
-//        amountToRemove = amountToRemove.multiply(DIME);
-//        balance = balance.subtract(amountToRemove);
-//
-//        amountToRemove = balance.divide(NICKEL);
-//        change += amountToRemove + " NICKELS ";
-//
-//        amountToRemove = amountToRemove.multiply(NICKEL);
-//        balance = balance.subtract(amountToRemove);
 
-       // return change;
+        BigDecimal numOfQuarters = balance.divide(QUARTER).setScale(0, RoundingMode.DOWN);
+        balance = balance.subtract((numOfQuarters).multiply(QUARTER));
+        BigDecimal numOfDimes = balance.divide(DIME).setScale(0, RoundingMode.DOWN);
+        balance = balance.subtract((numOfDimes).multiply(DIME));
+        BigDecimal numOfNickels = balance.divide(NICKEL).setScale(0, RoundingMode.DOWN);
+        balance = balance.subtract((numOfNickels).multiply(NICKEL));
+        String change = numOfQuarters + " Quarters, " + numOfDimes + " Dimes, " + numOfNickels + " nickels is your change.";
+        return change;
 
     }
 }
