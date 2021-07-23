@@ -5,7 +5,11 @@ import com.techelevator.exceptions.InvalidChoiceException;
 import com.techelevator.exceptions.OutOfStockException;
 import com.techelevator.view.Menu;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Time;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Scanner;
 
@@ -18,10 +22,12 @@ public class VendingMachineCLI {
 	private VendingMachine vendingMachine;
 	private Scanner scanner = new Scanner(System.in);
 	private Menu menu;
+	private Logger auditLogger;
 
 	public VendingMachineCLI(Menu menu) {
 		this.menu = menu;
 		this.vendingMachine = new VendingMachine();
+		this.auditLogger = new Logger("Log.txt");
 	}
 
 	public void run() {
@@ -31,13 +37,17 @@ public class VendingMachineCLI {
 			if (choice.equals(MAIN_MENU_OPTION_DISPLAY_ITEMS)) {
 				// display vending machine items
 				displayPurchaseItems();
-
 			} else if (choice.equals(MAIN_MENU_OPTION_PURCHASE)) {
 				purchasingProcessMenu();
 			}
-			else if(choice.equals(MAIN_MENU_OPTION_EXIT))
-				//TODO Add logger later
+			else if(choice.equals(MAIN_MENU_OPTION_EXIT)) {
+				try {
+					auditLogger.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 				System.exit(0);
+			}
 		}
 	}
 
@@ -61,7 +71,6 @@ public class VendingMachineCLI {
 		while(shouldDisplay) {
 			String choice = (String) menu.getChoiceFromOptions(purchaseMenuOptions);
 
-			// TODO: DEAL WITH THIS
 			System.out.println("\nCurrent Money Provided: $" + vendingMachine.getBalance());
 
 
@@ -77,9 +86,7 @@ public class VendingMachineCLI {
 					}
 					break;
 				case PURCHASE_MENU_OPTION_FINISH_TRANSACTION:
-					//TODO
-					//finishTransaction();
-					System.out.println(vendingMachine.dispenseChange());
+					finishTransaction();
 					shouldDisplay = false;
 			}
 		}
@@ -96,6 +103,7 @@ public class VendingMachineCLI {
 			BigDecimal moneyInput = new BigDecimal(choice);
 			vendingMachine.addMoney(moneyInput);
 			System.out.println("\nCurrent Money Provided: $" + vendingMachine.getBalance());
+			auditLogger.logWithDateStamp("FEED MONEY: $" + moneyInput.setScale(2) + " $" + vendingMachine.getBalance());
 
 			System.out.println("Would you like to add more money?");
 			String[] options = {"Yes", "No"};
@@ -110,7 +118,7 @@ public class VendingMachineCLI {
 	private void selectProduct() throws OutOfStockException, InvalidChoiceException, InsufficientFundsException {
 		//System.out.println("What item would you like to purchase?");
 		displayPurchaseItems();
-		System.out.print("Choose the snack you would like to purchase>>>");
+		System.out.print("Choose the snack you would like to purchase >>> ");
 		String idChoice = scanner.nextLine();
 		VendingMachineItem itemToVend = null;
 		List<VendingMachineItem> allItems = vendingMachine.getInventory();
@@ -135,28 +143,34 @@ public class VendingMachineCLI {
 		}
 
 		// If valid item is chosen, dispense it to customer
-
 		dispenseProduct(itemToVend);
 	}
 
 	public void dispenseProduct(VendingMachineItem itemToVend) {
 
+			BigDecimal previousBalance = vendingMachine.getBalance();
 			itemToVend.reduceStock();
-			//TODO ADD LOGGER
+
 			vendingMachine.subtractMoney(itemToVend.getPrice());
 			System.out.println("\nDispensing " + itemToVend.getName()+" $"+itemToVend.getPrice());
 			System.out.println("Balance Remaining: $"+ vendingMachine.getBalance());
 			System.out.println(itemToVend.getSound());
+
+			auditLogger.logWithDateStamp(itemToVend.getName() + " " + itemToVend.getId() + " $" + previousBalance + " $" + vendingMachine.getBalance());
+
 	}
 
-
-
-
-
+	public void finishTransaction() {
+		BigDecimal previousBalance = vendingMachine.getBalance();
+		System.out.println(vendingMachine.dispenseChange());
+		auditLogger.logWithDateStamp("GIVE CHANGE: $" + previousBalance + " $" + vendingMachine.getBalance());
+	}
 
 	public static void main(String[] args) {
 		Menu menu = new Menu(System.in, System.out);
 		VendingMachineCLI cli = new VendingMachineCLI(menu);
 		cli.run();
+
+
 	}
 }

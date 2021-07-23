@@ -83,6 +83,5 @@ public class VendingMachine {
         balance = balance.subtract((numOfNickels).multiply(NICKEL));
         String change = numOfQuarters + " Quarters, " + numOfDimes + " Dimes, " + numOfNickels + " nickels is your change.";
         return change;
-
     }
 }
