@@ -25,17 +25,17 @@ public class VendingMachineCLI {
 	private Scanner scanner = new Scanner(System.in);
 	private Menu menu;
 	private Logger auditLogger;
-	private Map<VendingMachineItem, Integer> countSales;
+	//private Map<VendingMachineItem, Integer> countSales;
 
 	public VendingMachineCLI(Menu menu) {
 		this.menu = menu;
 		this.vendingMachine = new VendingMachine();
 		this.auditLogger = new Logger("Log.txt");
-		this.countSales = new HashMap<>();
+
 	}
 
 	public void run() {
-		loadCountSalesMap();
+
 		while (true) {
 			String choice = (String) menu.getChoiceFromOptions(MAIN_MENU_OPTIONS, true);
 
@@ -163,7 +163,7 @@ public class VendingMachineCLI {
 			System.out.println(itemToVend.getSound());
 
 			auditLogger.logWithDateStamp(itemToVend.getName() + " " + itemToVend.getId() + " $" + previousBalance + " $" + vendingMachine.getBalance());
-			addItemToMap(itemToVend);
+
 	}
 
 	public void finishTransaction() {
@@ -172,21 +172,20 @@ public class VendingMachineCLI {
 		auditLogger.logWithDateStamp("GIVE CHANGE: $" + previousBalance + " $" + vendingMachine.getBalance());
 	}
 
-	public void addItemToMap(VendingMachineItem itemToVend) {
-		countSales.put(itemToVend, countSales.get(itemToVend) + 1);
-	}
+
 
 	private void printHiddenMenu() {
+		final int MAX_STOCK = 5;
 		DateTimeFormatter format = DateTimeFormatter.ofPattern("MM-dd-yyyy_HH-mm-ss");
 		String dateTime = LocalDateTime.now().format(format);
 
-		String fileName = "SalesReport" + dateTime + ".txt";
+		String fileName = "SalesReport_" + dateTime + ".txt";
 		Logger totalSalesLogger = new Logger(fileName);
 
 		BigDecimal totalSales = new BigDecimal("0.0");
 
-		for(VendingMachineItem item : countSales.keySet()) {
-			int quantity = countSales.get(item);
+		for(VendingMachineItem item : vendingMachine.getInventory()) {
+			int quantity =  MAX_STOCK -  item.getStock();
 			BigDecimal costForItem = new BigDecimal(quantity).multiply(item.getPrice());
 			totalSales = totalSales.add(costForItem);
 			totalSalesLogger.log(item.getName() + "|" + quantity);
@@ -201,15 +200,7 @@ public class VendingMachineCLI {
 		}
 	}
 
-	private void loadCountSalesMap() {
-		List<VendingMachineItem> items = vendingMachine.getInventory();
 
-		for (VendingMachineItem item : items) {
-			if(!countSales.containsKey(item)) {
-				countSales.put(item, 0);
-			}
-		}
-	}
 
 	public static void main(String[] args) {
 		Menu menu = new Menu(System.in, System.out);

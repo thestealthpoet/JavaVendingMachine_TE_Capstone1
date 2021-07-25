@@ -10,7 +10,7 @@ public class DrinkTest {
 
 
     @Test
-    public void drinkSoundIsGlugGlugYum(){
+    public void drink_Sound_Is_Glug_Glug_Yum(){
         //ARRANGE
         Drink drink = new Drink("Water",new BigDecimal("1.00"),"A2");
         //ACT
@@ -23,7 +23,7 @@ public class DrinkTest {
 
 
     @Test
-    public void drinkIsMaxQtyOnLoad(){
+    public void drink_Is_Max_Qty_On_Load(){
         //ARRANGE
         Drink drink = new Drink("Water",new BigDecimal("1.00"),"B2");
         //ACT
@@ -34,7 +34,7 @@ public class DrinkTest {
     }
 
     @Test
-    public void drinkA2IdReturnsA2Id() {
+    public void drink_A2_Id_Returns_A2_Id() {
         Drink drink = new Drink("Water", new BigDecimal("1.00"),"A2");
 
         String actual = drink.getId();
@@ -45,7 +45,7 @@ public class DrinkTest {
 
 
     @Test
-    public void drinkWaterNameReturnsWaterName() {
+    public void drink_Water_Name_Returns_Water_Name() {
         Drink drink = new Drink("Water", new BigDecimal("1.00"),"A2");
 
         String actual = drink.getName();
@@ -56,7 +56,7 @@ public class DrinkTest {
 
 
     @Test
-    public void drink1DollarPriceReturns1DollarPrice() {
+    public void drink_1_Dollar_Price_Returns_1_Dollar_Price() {
         Drink drink = new Drink("Water", new BigDecimal("1.00"),"A2");
 
         BigDecimal actual = drink.getPrice();
@@ -66,7 +66,7 @@ public class DrinkTest {
     }
 
     @Test
-    public void testIsSoldOutIsTrueWhenStockIs0() {
+    public void test_Is_SoldOut_Is_True_When_Stock_Is_0() {
         Drink drink = new Drink("Water", new BigDecimal("1.00"),"A2");
         for(int i = 0; i < 5; i++) {
             drink.reduceStock();
@@ -79,7 +79,7 @@ public class DrinkTest {
     }
 
     @Test
-    public void testIsSoldOutIsFalseWhenStockIs1() {
+    public void test_Is_SoldOut_Is_False_When_Stock_Is_1() {
         Drink drink = new Drink("Water", new BigDecimal("1.00"),"A2");
         for(int i = 0; i < 4; i++) {
             drink.reduceStock();
@@ -92,7 +92,7 @@ public class DrinkTest {
     }
 
     @Test
-    public void testReduceStockWhenNotSoldOutShouldReturnTrue() {
+    public void test_Reduce_Stock_When_Not_SoldOut_Should_Return_True() {
         Drink drink = new Drink("Water", new BigDecimal("1.00"),"A2");
 
         boolean expected = true;
@@ -102,7 +102,7 @@ public class DrinkTest {
     }
 
     @Test
-    public void testReduceStockWhenSoldOutShouldReturnFalse() {
+    public void test_Reduce_Stock_When_SoldOut_Should_Return_False() {
         Drink drink = new Drink("Water", new BigDecimal("1.00"),"A2");
         for(int i = 0; i < 5; i++) {
             drink.reduceStock();
@@ -115,7 +115,7 @@ public class DrinkTest {
     }
 
     @Test
-    public void toStringShouldReturnCorrectly() {
+    public void toString_Should_Return_Correctly() {
         Drink drink = new Drink("Water", new BigDecimal("1.00"),"A2");
 
         String expected = "A2 Water 1.00";
